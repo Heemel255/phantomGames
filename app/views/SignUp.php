@@ -15,14 +15,14 @@
 		</div>
 		<div id="main">
 			<div id="reg_wrap">
+			<p style="margin-left: 25%; margin-bottom:100px; font-size: 125%;">Welcome to Phantom Games! Make an account to start playing games and keep track of your score.</p>
 				<div id="left">			
 					<section>
-					<?php echo $infos ?>
 						<form>
 						<h2>Login</h2>
 						Username: <input type='text' name='user'>
 						<br><br>
-						Password: &nbsp;<input type='password' name='pass'>
+						Password: <input type='password' name='pass' style="margin-left:4px;">
 						<br><br>
 						<input type='submit' value='Log In'>
 						</form>
@@ -34,16 +34,17 @@
 					<section>
 						<h2>Sign Up</h2>
 						<form>
-						Username: <input type='text' name='user'>
+						Username: <input type='text' name='user' style="margin-left:65px;">
 						<br><br>
-						Password: <input type='password' name='pass'>
+						Password: <input type='password' name='pass' style="margin-left:69px;">
 						<br><br>
-						Re-Enter Password: <input type='password' name='verifypass'>
+						Re-Enter Password: <input type='password' name='verifypass' style="margin-left:2px;">
 						<br><br>
 						<input type='submit' value='Register'>
 						</form>
 					</section>
 				</div>
+				<?php echo "<p style='color: red; margin-left:41%; margin-top:50px; font-size:120%'>".$infos."</p>" ?>
 			</div>
 		</div>
 		<div id="footer-wrapper">

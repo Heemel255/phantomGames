@@ -43,6 +43,7 @@
 		<div id="main">
 			<div id="container">
 				<h2><?php echo $gamename; ?></h2>
+				<p>Use the arrow keys to move up and down.</p>
 			</div>
                     <div style="height: 40em;">
                         <script>
@@ -50,8 +51,7 @@
                             var UpArrow = 38,DownArrow = 40;
                             var canvas,context,keystate;
                            
-                            
-                            player = {
+							player = {
                             x: null,
                             y: null,
                             width:  20,
@@ -67,9 +67,9 @@
                             draw: function() {
                                     context.fillRect(this.x, this.y, this.width, this.height);
                             }
-                    },
+							},
                     
-                    ai = {
+							ai = {
                             x: null,
                             y: null,
                             width:  20,
@@ -88,16 +88,16 @@
                             draw: function() {
                                     context.fillRect(this.x, this.y, this.width, this.height);
                             }
-                    },
+							}	,
                     
-                    ball = {
+							ball = {
                             x:   null,
                             y:   null,
                             vel: null,
                             side:  20,
                             speed: 12,
                             
-                            serve: function(side) {
+                            startmove: function(way) {
                                     
                                     this.x = 1;
                                     this.y = 1;
@@ -126,7 +126,7 @@
                                         totalscore++;
                                     
                                     if (0 > this.x + this.side || this.x > WIDTH) {
-                                            this.serve(pdle == player ? 1 : -1);
+                                            this.startmove(pdle == player ? 1 : -1);
                                     }
                             },
                             
@@ -142,8 +142,8 @@
                             canvas.height = HEIGHT;
                             context = canvas.getContext("2d");
                             document.body.appendChild(canvas);
-                            keystate = {};
                             
+							keystate = {};
                             document.addEventListener("keydown", function(evt) 
                             {
                                     keystate[evt.keyCode] = true;
@@ -169,7 +169,7 @@
                             player.y = (HEIGHT - player.height)/2;
                             ai.x = WIDTH - (player.width + ai.width);
                             ai.y = (HEIGHT - ai.height)/2;
-                            ball.serve(1);
+                            ball.startmove(1);
                     }
                     
                     function update() {
@@ -188,13 +188,20 @@
                             ball.draw();
                             player.draw();
                             ai.draw();
+							
                             context.font="30px Verdana";
                             context.fillText(String(totalscore),WIDTH / 2 - 10,50);
                             context.restore();
                             
                     }
+                    window.addEventListener("keydown", function(e) 
+					{
+						if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+								e.preventDefault();
+						}
+					}, false);
                     
-                    runall(); 
+					runall(); 
                     </script>
                     </div>
                     

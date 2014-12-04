@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 class HomeController extends BaseController {
         
     private $user;
@@ -20,13 +17,12 @@ class HomeController extends BaseController {
 
         if($this->user != null){
             
-            if($this->user->isAdmin()){
+            $this->SaveUser();
+			
+            if($this->user->isAdmin())
                 return Redirect::to("admintools");
-            }
-            else{
-                $this->SaveUser();
-                return Redirect::to("game");
-            }
+            else
+				return Redirect::to("game");
         }
         else{
             return View::make('SignUp')->with('infos',$this->signupInfo);
@@ -38,14 +34,21 @@ class HomeController extends BaseController {
         if(isset($_GET['GameName'])){
 
             $this->gamesDBhandler = new GamesDB();
-            $this->gamesDBhandler->addNewGame($_GET['GameName']);
-            $this->adminInfo = 'Game inserted!';
+            
+            if($this->gamesDBhandler->addNewGame($_GET['GameName']))
+				$this->adminInfo = 'Game inserted!';
+			else
+				$this->adminInfo = 'Game already exists.';
+			
         }
         if(isset($_GET['userdeleted'])){
 
             $this->accntHandler = new User();
-            $this->accntHandler->deletePlayer($_GET['userdeleted']);
-            $this->adminInfo = sprintf('User %s deleted',$_GET['userdeleted']);
+            
+            if($this->accntHandler->deletePlayer($_GET['userdeleted']))
+                $this->adminInfo = sprintf('User %s deleted.',$_GET['userdeleted']);
+            else
+                $this->adminInfo = sprintf('User %s does not exist.',$_GET['userdeleted']);
         }
         
         return View::make('admin')->with('info',$this->adminInfo);
@@ -54,18 +57,20 @@ class HomeController extends BaseController {
     public function execProfile()
     {
         $this->accntHandler = new User();
+        
         session_start();
-
-        $userTemp = $_SESSION['user'] ;
-
-        $unlockedachevies = Acheivments::getAllUnlocked($_SESSION['user']);
+        $usertemp = $_SESSION['user'];
+        
+        $unlockedachevies = Acheivments::getAllUnlocked($usertemp);
+        $checkAllAchieves = Acheivments::allAchievesUnlocked($usertemp);
 
         return View::make('profile')
-                ->with('name',$userTemp->getUsername())
-                ->with('score',$userTemp->getScore())
-                ->with('playtime',$userTemp->getPlayTime())
-                ->with('gamesplayed',$userTemp->getGamesPlayed())
-                ->with('unlockedachevies',$unlockedachevies);
+                ->with('name',$usertemp->getUsername())
+                ->with('score',$usertemp->getScore())
+                ->with('playtime',$usertemp->getPlayTime())
+                ->with('gamesplayed',$usertemp->getGamesPlayed())
+                ->with('unlockedachevies',$unlockedachevies)
+		->with('allAchievesUnlocked',$checkAllAchieves);
 
     }
     public function execLeaderBoard()
@@ -76,26 +81,24 @@ class HomeController extends BaseController {
         
         $name = [];
         $score = [];
-
+		
         foreach($leadtemp as $lt){
 
             $tempexplode = explode(':', $lt);
             $name[] = $tempexplode[0];
             $score[] = $tempexplode[1];
-        }
-
-        return View::make('leaderboard')
+		}
+		
+		return View::make('leaderboard')
                 ->with('names',$name)
                 ->with('scores',$score);
     }
     public function execGamePage()
     {
         $this->gamesDBhandler = new GamesDB();
-
-        $games = $this->gamesDBhandler->getAllGames();
-        $totalGames = count($games);
-
-        $gamename = [];
+		$games = $this->gamesDBhandler->getAllGames();
+        
+		$gamename = [];
         $gamehit = [];
         $gamesimage = [];
         $gamenameurlparam = [];
@@ -115,18 +118,17 @@ class HomeController extends BaseController {
                 $gamenameurlparam[] = str_replace(' ', '_', $tempexplode[0]);
             else
                 $gamenameurlparam[] = 'gameTemplate';
-
-        }
+		}
 
         return View::make('game')
-                ->with('totalGames',$totalGames)
+                ->with('totalGames',count($games))
                 ->with('gameNameArr',str_replace('_',' ',$gamename))
                 ->with('gameHitsArr',$gamehit)
                 ->with('gamesimageArr',$gamesimage)
                 ->with('gameurl',$gamenameurlparam);
 
     }
-    
+	
     public function execPlayGame($gamename)
     {
         $this->gamesDBhandler = new GamesDB();
@@ -157,8 +159,6 @@ class HomeController extends BaseController {
         return Redirect::to("game");
     }
 
-    /* ----------------- */
-
     public function UpdateUser()
     {
 
@@ -180,11 +180,10 @@ class HomeController extends BaseController {
     //this function is for retrieving an already logged in user that is saved into a session
     public function CreateLoggedInUserOj()
     {
-        if (session_status() == PHP_SESSION_NONE) {
+        if (session_status() == PHP_SESSION_NONE) 
             session_start();
-        }
-
-        return new Player($_SESSION['user']->getUsername(),$_SESSION['user']->getPassword(),
+        
+		return new Player($_SESSION['user']->getUsername(),$_SESSION['user']->getPassword(),
                 $_SESSION['user']->getScore(),$_SESSION['user']->getPlayTime(),$_SESSION['user']->getGamesPlayed()); 
     }
 
@@ -199,25 +198,24 @@ class HomeController extends BaseController {
 
                 $this->user = $this->accntHandler->SignUp($userN,$passW);
 
-                    if($this->user == null){
-                        $this->signupInfo = 'user already exists';
-                    }
+				if($this->user == null)
+					$this->signupInfo = 'Username was already taken!';
+                    
             }
             else {
-                    $this->signupInfo = 'both passwords not same';
+				
+				$this->signupInfo = 'Passwords do not match!';
             }
         }
         else{
             $this->user = $this->accntHandler->LogIn($userN,$passW);
 
-            if($this->user == null && isset($_GET['user'])){
-                $this->signupInfo = 'not correct login info';
-            }
+            if($this->user == null && isset($_GET['user']))
+                $this->signupInfo = 'Incorrect login info!';
+            
         }
     }
 }
-
-
 
 abstract class AbstractAccount{
     
@@ -256,9 +254,8 @@ class Player extends AbstractAccount{
     private $score = 0;
     private $playTime = 0;
     private $gamesPlayed = 0;
-  
-
-    public function __construct($username, $password, $score, $playTime, $gamesPlayed)
+	
+	public function __construct($username, $password, $score, $playTime, $gamesPlayed)
     {
         parent::__construct($username, $password);
         parent::setAdmin(false);
@@ -302,58 +299,61 @@ class Admin extends AbstractAccount{
     
     public function __construct($username, $password)
     {
+		parent::__construct($username, $password);
         parent::setAdmin(true);
     }
 }
 
 class Acheivments{
     
+    public static function allAchievesUnlocked($user)
+    {
+            $unlocked = count(self::getAllUnlocked($user));
+            $all = count(self::openfile());
+            return $all == $unlocked;
+    }
+	
     public static function getAllUnlocked($user)
     {
         $allAcheivesInFile = self::openfile();
-    
         $unlocked = [];
         
+        //iterate through each achievemnt
         foreach($allAcheivesInFile as $all){
-            
-            $names = [];
-            $scores = [];
-            $playtimes = [];
-            $gamesplayed = [];
             
             //4 parts to type explode
             $typeExplode = explode('|||', $all);
             
-            foreach($typeExplode as $typeE){
-                
-                //2 parts to attribute explode
-                $attExplode = explode('=', $typeE);
-                
-                if($attExplode[0] == 'name'){
-                    $names[] = $attExplode[1];
-                }
-                else if($attExplode[0] == 'score'){
-                    $scores[] = $attExplode[1];
-                }
-                else if($attExplode[0] == 'playtime'){
-                    $playtimes[] = $attExplode[1];
-                }
-                else if($attExplode[0] == 'gamesplayed'){
-                    $gamesplayed[] = $attExplode[1];
-                }
+            $names = self::getAtrributes($typeExplode,'name');
+            $scores = self::getAtrributes($typeExplode,'score');
+            $playtimes = self::getAtrributes($typeExplode,'playtime');
+            $gamesplayed = self::getAtrributes($typeExplode,'gamesplayed');
+            
+            if($user->getGamesPlayed() >= $gamesplayed 
+                    && $user->getScore() >= $scores && $user->getPlayTime() >= $playtimes){
+
+                $unlocked[] = sprintf('<b>%s</b><br>Score: %s - Play Time: %s - Games Played: %s',$names,$scores,$playtimes,$gamesplayed);
             }
             
-            for($i = 0; $i < count($names); $i++){
-                
-                if($user->getGamesPlayed() >= $gamesplayed[$i] 
-                        && $user->getScore() >= $scores[$i] && $user->getPlayTime() >= $playtimes[$i]){
-                    
-                    $unlocked[] = sprintf('%s - Score:%s, Play Time:%s, Games Played:%s',$names[$i],$scores[$i],$playtimes[$i],$gamesplayed[$i]);
-                }
-            }
         }
         
         return $unlocked;
+    }
+    
+    private static function getAtrributes($typeExplode,$attrName)
+    {
+        $attr = '';
+        foreach($typeExplode as $typeE){
+                
+            //2 parts to attribute explode
+            $attExplode = explode('=', $typeE);
+
+            if($attExplode[0] == $attrName){
+                $attr = $attExplode[1];
+            }
+            
+        }
+        return $attr;
     }
     
     private static function openfile()
@@ -363,10 +363,16 @@ class Acheivments{
         $file = public_path() . '/achiev_require.txt';
         $fp = fopen($file, 'r');
         
-        if($fp){
+        if($fp)
             $allAcheivesInFile = explode("\n", fread($fp, filesize($file)));
-        }
+		
+        fclose($fp);
+        
+        while($emptyline = array_search('', $allAcheivesInFile))
+                unset($allAcheivesInFile[$emptyline]);
+        
         
         return $allAcheivesInFile;
     }
+    
 }

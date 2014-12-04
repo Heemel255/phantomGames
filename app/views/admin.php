@@ -22,16 +22,16 @@
 					<h2>Add Game</h2>
 					<form>
 					Game Name: <input type="text" name="GameName"><br><br>
-					<input type="submit" value="Add Game">
+					<input type="submit" value="Add Game" style="margin-top:10px;">
 					</form>
 					<br><br><br>
 					<h2>Remove User</h2>
 					<form>
 					Username: <input type="text" name="userdeleted"><br><br>
-					<input type="submit" value="Remove User">
+					<input type="submit" value="Remove User" style="margin-top:10px;">
 					</form>
-                                        <br>
-                                        <?php echo $info; ?>
+						<br>
+						<?php echo $info; ?>
 				</section>
 			</div>
 		</div>

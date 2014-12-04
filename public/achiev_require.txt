@@ -8,13 +8,16 @@ name=5 Minutes|||score=0|||playtime=18000|||gamesplayed=0
 name=10 Minutes|||score=0|||playtime=36000|||gamesplayed=0
 name=Half Hour|||score=0|||playtime=108000|||gamesplayed=0
 name=Full Hour|||score=0|||playtime=216000|||gamesplayed=0
-name=First Few|||score=0|||playtime=0|||gamesplayed=5
-name=Decent Amount|||score=0|||playtime=0|||gamesplayed=10
-name=Keep Playing|||score=0|||playtime=0|||gamesplayed=20
-name=Experienced|||score=0|||playtime=0|||gamesplayed=40
-name=Novice|||score=5|||playtime=18000|||gamesplayed=5
-name=Apprentice|||score=10|||playtime=36000|||gamesplayed=10
-name=Adept|||score=20|||playtime=54000|||gamesplayed=15
-name=Expert|||score=40|||playtime=108000|||gamesplayed=20
-name=Master|||score=80|||playtime=162000|||gamesplayed=25
-name=Legendary|||score=160|||playtime=216000|||gamesplayed=30
+name=First Few|||score=0|||playtime=0|||gamesplayed=10
+name=Decent Amount|||score=0|||playtime=0|||gamesplayed=25
+name=Keep Playing|||score=0|||playtime=0|||gamesplayed=60
+name=Experienced|||score=0|||playtime=0|||gamesplayed=100
+
+name=Novice|||score=5|||playtime=18000|||gamesplayed=15
+name=Apprentice|||score=10|||playtime=36000|||gamesplayed=30
+name=Adept|||score=20|||playtime=54000|||gamesplayed=65
+
+name=Expert|||score=40|||playtime=108000|||gamesplayed=100
+name=Master|||score=80|||playtime=162000|||gamesplayed=120
+name=Legendary|||score=160|||playtime=216000|||gamesplayed=150
+

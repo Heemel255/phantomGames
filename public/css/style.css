@@ -27,10 +27,19 @@ p {
 	line-height: 1.8em;
 }
 
-table, th, tr, td{
+table{
+	border-collapse: collapse;		border-style:hidden;	
+}
+td, th{	border:1px solid #878e83;}
+
+input[type=text], input[type=password] {
 	border: 1px solid #878e83;
-	border-collapse: collapse;
-	width:20%;
+	background-color:#FFFFD3;
+	height:20px;
+}
+
+input[type=submit] {
+	height:26px;
 }
 
 #header-wrapper {
@@ -93,7 +102,7 @@ table, th, tr, td{
 
 #container {
 	margin: 1em auto;
-	margin-bottom:15em;
+	margin-bottom:5em;
 	width: 1200px;
 }
 
@@ -105,13 +114,13 @@ table, th, tr, td{
 		#left {
 			width: 260px;
 			float: left;
-			padding: 0 0 0 30%;
+			padding: 0 0 0 28%;
 		}
 
 		#right {
 			width: 350px;
-			overflow: auto;
-			padding: 0 15% 0 5%;
+			overflow: hidden;
+			padding: 0 15% 0 10%;
 		}
 		
 #container2 {

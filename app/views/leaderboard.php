@@ -26,18 +26,17 @@
                             <h2> Leaderboards</h2>
                                 <table>
                                     <tr>
-                                        <th>Name</th>
+                                        <th style="border-top: 0; border-left:0;">Name</th>
                                         <th>Score</th>
                                     </tr>
                                     <?php 
                                         for($i = 0; $i < count($names); $i++){
                                             echo '
-                                            <tr>
-                                                    <th>'.$names[$i].'</th>
-                                                    <th>'.$scores[$i].'</th>
-                                            </tr>
-
-                                            ';
+                                            <tr style="border:1px solid #878e83; text-align: center;">
+                                                    <td style="width:20%;">'.$names[$i].'
+													</td>
+                                                    <td style="width:20%;">'.$scores[$i].'</td>
+                                            </tr>';
                                         }
                                     ?>
                                 </table>

@@ -10,12 +10,14 @@ class User extends Eloquent{
     {
         $this->con = new PDO("mysql:dbname=f4907207_phantomGames;host=gblearn.com","f4907207_phantom","zRX,zU*F+?G$");
     }
-    
+    private function fetchFromTable($table)
+	{
+		$qry = $this->con->query("SELECT * FROM ".$table);
+        return $qry->fetchAll();
+	}
     public function LogIn($userEn,$passEn)
     {
-        $qry = $this->con->query("SELECT * FROM player");
-        $fetched = $qry->fetchAll();
-          
+        $fetched = $this->fetchFromTable("player");
         for($i = 0; $i < count($fetched); $i++){
 
             if($userEn == $fetched[$i]['username'] && $passEn == $fetched[$i]['password']){
@@ -27,8 +29,7 @@ class User extends Eloquent{
         }
         
         //is not player, check if account is admin
-        $qry = $this->con->query("SELECT * FROM admin");
-        $fetched = $qry->fetchAll();
+		$fetched = $this->fetchFromTable("admin");
           
         for($i = 0; $i < count($fetched); $i++){
 
@@ -43,9 +44,7 @@ class User extends Eloquent{
     }
     public function SignUp($userEn,$passEn)
     {
-        $qry = $this->con->query("SELECT * FROM player");
-        $fetched = $qry->fetchAll();
-          
+        $fetched = $this->fetchFromTable("player");
         for($i = 0; $i < count($fetched); $i++){
 
             if($userEn == $fetched[$i]['username']){
@@ -69,23 +68,30 @@ class User extends Eloquent{
     }
     public function getLeaderboards()
     {
-        
         $arrayLead = [];
+        $fetched = $this->fetchFromTable("player ORDER BY score DESC");
         
-        $qry = $this->con->query("SELECT * FROM player ORDER BY score DESC");
-        $fetched = $qry->fetchAll();
-          
-        for($i = 0; $i < count($fetched); $i++){
-
-            $arrayLead[$i] = $fetched[$i]['username'] . ':' . $fetched[$i]['score'];
-        }
+		for($i = 0; $i < count($fetched); $i++)
+			$arrayLead[$i] = $fetched[$i]['username'] . ':' . $fetched[$i]['score'];
         
         return $arrayLead;
     }
     
     public function deletePlayer($userEn)
     {
-        $query = sprintf("delete from player where username='%s'",$userEn);
-        $this->con->exec($query);
+        $fetched = $this->fetchFromTable("player");
+		
+        for($i = 0; $i < count($fetched); $i++){
+
+            if($userEn == $fetched[$i]['username']){
+                
+                $query = sprintf("delete from player where username='%s'",$userEn);
+				$this->con->exec($query);
+				return true;
+            }
+        }
+		
+		return false;
+        
     }
 }

@@ -22,20 +22,26 @@
 		<div id="main">
 			<div id="container">	
 				<section>
-							<h2><?php echo $name; ?></h2>
+							<?php 	
+								if($allAchievesUnlocked) 
+									echo '<img src="medal.png" style="float:left;margin-left:85px;margin-top:9px;">
+										<h2 style="position:relative;right:100px;">'. $name .'</h2>'; 
+								else
+									echo '<h2>'.$name.'</h2>';
+							?>
+							
 							<p>Score: <?php echo $score; ?></p>
-								<p>Play Time: <?php echo $playtime; ?> seconds</p>
-								<p>Games Played: <?php echo $gamesplayed; ?></p>
-                                                                <br>
-                                                                <h2>Unlocked Acheivements</h2>
-                                                                
-                                                               <?php 
-                                                                    foreach($unlockedachevies as $unlocked){
-                                                                        
-                                                                        echo '<p>'. $unlocked . '</p>';
-                                                                    }
-                                                               
-                                                               ?> 
+							<p>Play Time: <?php echo $playtime; ?> seconds</p>
+							<p>Games Played: <?php echo $gamesplayed; ?></p>
+							<br>
+							<h2>Unlocked Acheivements</h2>
+							<?php 
+								if($allAchievesUnlocked) 
+									echo '<b>You have unlocked all the achievements!</b>'; 
+								  
+								foreach($unlockedachevies as $unlocked)
+									echo '<p>'. $unlocked . '</p>';
+							?> 
 						</section>
 			</div>
 		</div>
